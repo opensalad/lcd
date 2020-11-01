@@ -11,12 +11,16 @@ namespace opensalad
 
 		}
 
-		void simple_backlight_control::set_backlight_intencity(byte_t const& i)
+		bool simple_backlight_control::set_backlight_intencity(byte_t const& i)
 		{
+			if (m_intencity == i)
+				return false;
+
 			m_intencity = i;
+			return true;
 		}
 
-		byte_t simple_backlight_control::set_backlight_intencity() const
+		byte_t simple_backlight_control::get_backlight_intencity() const
 		{
 			return m_intencity;
 		}
