@@ -14,6 +14,8 @@ namespace opensalad
 		public:
 			void send_command(byte_t const& cmd) override;
 			void send_data(byte_t const& data) override;
+			byte_t get_status() override;
+			byte_t get_data() override;
 		};
 	}
 }

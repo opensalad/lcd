@@ -14,5 +14,15 @@ namespace opensalad
 		{
 
 		}
+
+		byte_t lcd::get_status()
+		{
+
+		}
+
+		byte_t lcd::get_data()
+		{
+
+		}
 	}
 }
