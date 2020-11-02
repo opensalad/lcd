@@ -12,6 +12,8 @@ namespace opensalad
 			class i_observable_backlight_control_interface
 				: i_backlight_control_interface
 			{
+			public:
+				virtual ~i_observable_backlight_control_interface() = default;
 				virtual void on_backlight_intencity_changed(std::function<void()> const& cb) = 0;
 				virtual void on_backlight_color_changed(std::function<void()> const& cb) = 0;
 			};
