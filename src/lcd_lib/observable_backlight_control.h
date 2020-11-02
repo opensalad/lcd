@@ -7,7 +7,7 @@ namespace opensalad
 {
 	namespace lcd
 	{
-		class observable_backlight_control
+		class LCD_EXPORT observable_backlight_control
 			: public iface::i_observable_backlight_control_interface
 		{
 		public:

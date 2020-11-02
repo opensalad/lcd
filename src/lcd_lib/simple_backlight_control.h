@@ -6,7 +6,7 @@ namespace opensalad
 {
 	namespace lcd
 	{
-		class simple_backlight_control
+		class LCD_EXPORT simple_backlight_control
 			: public iface::i_backlight_control_interface
 		{
 		public:
