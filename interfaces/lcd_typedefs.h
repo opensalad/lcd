@@ -11,5 +11,17 @@ namespace opensalad
 			byte_t green;
 			byte_t blue;
 		};
+		
+		using dimensions_t = struct
+		{
+			byte_t width;
+			byte_t height;
+		};
+
+		using position_t = struct
+		{
+			byte_t x;
+			byte_t y;
+		};
 	}
 }
