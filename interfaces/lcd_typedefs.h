@@ -23,5 +23,10 @@ namespace opensalad
 			byte_t x;
 			byte_t y;
 		};
+
+		using character_t = struct
+		{
+			byte_t row[8];
+		};
 	}
 }
