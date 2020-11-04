@@ -17,12 +17,27 @@ namespace opensalad
 
 		byte_t lcd::get_status()
 		{
-
+			return 0;
 		}
 
 		byte_t lcd::get_data()
 		{
+			return 0;
+		}
 
+		void lcd::draw()
+		{
+
+		}
+
+		dimensions_t lcd::get_screen_dimensions() const
+		{
+			return dimensions_t{};
+		}
+
+		dimensions_t lcd::get_char_at(position_t const& position) const
+		{
+			return dimensions_t{};
 		}
 	}
 }
