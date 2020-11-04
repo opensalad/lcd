@@ -5,6 +5,12 @@ namespace opensalad
 {
 	namespace lcd
 	{
+		lcd::lcd(std::shared_ptr<iface::i_lcd_drawer_interface> drawer_interface)
+			: m_drawer_interface(drawer_interface)
+		{
+			init();
+		}
+
 		void lcd::send_command(byte_t const& cmd)
 		{
 
@@ -25,19 +31,9 @@ namespace opensalad
 			return 0;
 		}
 
-		void lcd::draw()
+		void lcd::init()
 		{
 
-		}
-
-		dimensions_t lcd::get_screen_dimensions() const
-		{
-			return dimensions_t{};
-		}
-
-		dimensions_t lcd::get_char_at(position_t const& position) const
-		{
-			return dimensions_t{};
 		}
 	}
 }
