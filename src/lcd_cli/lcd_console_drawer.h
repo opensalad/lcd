@@ -34,6 +34,7 @@ namespace opensalad
 			dimensions_t m_dimensions;
 			byte_t m_backlight_intencity;
 			color_t m_backlight_color;
+			position_t m_console_cursor_position;
 		};
 	}
 }

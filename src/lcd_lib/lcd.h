@@ -3,6 +3,7 @@
 #include <i_lcd_interface.h>
 #include <i_lcd_drawer_interface.h>
 #include "observable_backlight_control.h"
+#include "signal.h"
 
 namespace opensalad
 {
@@ -27,6 +28,11 @@ namespace opensalad
 		private:
 			std::shared_ptr<iface::i_lcd_drawer_interface> m_drawer_interface;
 			std::thread m_running_thread;
+			std::vector<byte_t> m_ddram;
+			byte_t m_cursor_position;
+			byte_t m_width;
+			byte_t m_height;
+			volatile bool m_data_changed;
 		};
 	}
 }

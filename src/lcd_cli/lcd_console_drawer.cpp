@@ -38,6 +38,7 @@ namespace opensalad
 		void lcd_console_drawer::set_dimension(dimensions_t screen_dimension)
 		{
 			m_dimensions = screen_dimension;
+			m_char_buffer.resize(screen_dimension.width * screen_dimension.height, 0);
 		}
 
 		void lcd_console_drawer::set_backlight_intencity(byte_t backlight_intencity)
@@ -58,7 +59,19 @@ namespace opensalad
 
 		void lcd_console_drawer::draw_internal()
 		{
-			std::cout << "Drawing the LCD" << std::endl;
+			for (int y = 0; y < m_dimensions.height; ++y)
+			{
+				for (int x = 0; x < m_dimensions.width; ++x)
+				{
+					size_t position = convert_coordinate({ (byte_t)x, (byte_t)y });
+					if (position > m_char_buffer.size())
+						break;
+
+					std::cout << m_char_buffer[position] << std::flush;
+				}
+
+				std::cout << std::endl;
+			}
 		}
 
 		size_t lcd_console_drawer::convert_coordinate(position_t const& pos) const
