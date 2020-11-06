@@ -33,7 +33,13 @@ namespace opensalad
 
 		void lcd::init()
 		{
+			m_running_thread = std::thread{ std::bind(&lcd::run, this) };
+		}
 
+		void lcd::run()
+		{
+			m_drawer_interface->draw();
+			std::this_thread::sleep_for(std::chrono::milliseconds(30));
 		}
 	}
 }

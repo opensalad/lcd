@@ -22,9 +22,11 @@ namespace opensalad
 
 		private:
 			void init();
+			void run();
 
 		private:
 			std::shared_ptr<iface::i_lcd_drawer_interface> m_drawer_interface;
+			std::thread m_running_thread;
 		};
 	}
 }
