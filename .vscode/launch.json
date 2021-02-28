@@ -8,7 +8,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/bin/qt_gui.exe",
+            "program": "${workspaceFolder}/build/bin/lcd_cli.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -18,8 +18,8 @@
                     "value": "C:/.conan/afb081/1/bin"
                 }
             ],
-            "console": "internalConsole"
-        }
+            "console": "externalTerminal"
+        },
         {
             "name": "(Windows) Test",
             "type": "cppvsdbg",

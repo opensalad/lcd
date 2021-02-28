@@ -19,7 +19,7 @@ generate_export_header(lcd_lib
 source_group("Interfaces" FILES ${INTERFACES})
 source_group("Utilities" FILES ${UTILS})
 target_precompile_headers(lcd_lib
-PRIVATE
+PUBLIC
 	stdafx.h
 )
 target_include_directories(lcd_lib
