@@ -26,8 +26,8 @@ namespace opensalad
 				byte_t& b) const override;
 			bool is_backlight_color_supported() const override;
 
-			void on_backlight_intencity_changed(std::function<void()> const& cb) override;
-			void on_backlight_color_changed(std::function<void()> const& cb) override;
+			void on_backlight_intencity_changed(std::function<void(byte_t const&, byte_t const&)> const& cb) override;
+			void on_backlight_color_changed(std::function<void(color_t const&, color_t const&)> const& cb) override;
 
 		private:
 			utils::observable_property<byte_t> m_intencity;

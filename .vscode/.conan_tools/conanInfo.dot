@@ -1,0 +1,8 @@
+digraph {
+        "spdlog/1.8.2" -> "fmt/7.1.2"
+        "boost/1.75.0" -> "zlib/1.2.11"
+        "boost/1.75.0" -> "bzip2/1.0.8"
+        "boost/1.75.0" -> "libiconv/1.16"
+        "conanfile.py (lcd/0.0.1)" -> "spdlog/1.8.2"
+        "conanfile.py (lcd/0.0.1)" -> "boost/1.75.0"
+}

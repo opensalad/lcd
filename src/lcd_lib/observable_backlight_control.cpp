@@ -39,12 +39,12 @@ namespace opensalad
 			return false;
 		}
 
-		void observable_backlight_control::on_backlight_intencity_changed(std::function<void()> const& cb)
+		void observable_backlight_control::on_backlight_intencity_changed(std::function<void(byte_t const&, byte_t const&)> const& cb)
 		{
 			m_intencity.observe(cb);
 		}
 
-		void observable_backlight_control::on_backlight_color_changed(std::function<void()> const& cb)
+		void observable_backlight_control::on_backlight_color_changed(std::function<void(color_t const&, color_t const&)> const& cb)
 		{
 			m_color.observe(cb);
 		}

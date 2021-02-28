@@ -2,6 +2,7 @@ project(lcd_lib CXX)
 
 file(GLOB HEADERS "*.h")
 file(GLOB SOURCES "*.cpp")
+file(GLOB INTERFACES "${CMAKE_CURRENT_SOURCE_DIR}/interface/*.h")
 file(GLOB INTERFACES "${CMAKE_SOURCE_DIR}/interfaces/*.h")
 file(GLOB UTILS "${CMAKE_SOURCE_DIR}/utils/*.h")
 
@@ -23,7 +24,8 @@ PRIVATE
 )
 target_include_directories(lcd_lib
 PRIVATE
-	${CONAN_INCLUDE_DIR}
+	${CONAN_INCLUDE_DIRS}
+	${CMAKE_SOURCE_DIR}/src/
 	${CMAKE_SOURCE_DIR}/interfaces/
 	${CMAKE_SOURCE_DIR}/utils/
 	${CMAKE_BINARY_DIR}/exports
