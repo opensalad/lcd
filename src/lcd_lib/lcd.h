@@ -1,6 +1,6 @@
 #pragma once
 
-#include <i_lcd_interface.h>
+#include <lcd_lib/interface/i_lcd_controller_interface.h>
 #include <i_lcd_drawer_interface.h>
 #include "observable_backlight_control.h"
 #include "signal.h"
@@ -10,7 +10,7 @@ namespace opensalad
 	namespace lcd
 	{
 		class LCD_EXPORT lcd
-			: public iface::i_lcd_interface
+			: public iface::i_lcd_controller_interface
 			, public observable_backlight_control
 		{
 		public:

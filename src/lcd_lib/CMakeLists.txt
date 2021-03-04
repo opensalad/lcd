@@ -29,6 +29,7 @@ PRIVATE
 	${CMAKE_SOURCE_DIR}/interfaces/
 	${CMAKE_SOURCE_DIR}/utils/
 	${CMAKE_BINARY_DIR}/exports
+	${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_link_directories(lcd_lib
 PRIVATE

@@ -25,7 +25,7 @@ namespace opensalad
 			m_ddram[m_cursor_position++] = data;
 
 			position_t pos = { (byte_t)(m_cursor_position % m_width), (byte_t)(m_cursor_position / m_width) };
-			m_drawer_interface->set_char_at(pos, data);
+			//m_drawer_interface->set_char_at(pos, data);
 			m_data_changed = true;
 		}
 
@@ -42,7 +42,7 @@ namespace opensalad
 		void lcd::init()
 		{
 			m_ddram.resize(m_width * m_height, 0);
-			m_drawer_interface->set_dimension({ m_width, m_height });
+			//m_drawer_interface->set_dimension({ m_width, m_height });
 			m_running_thread = std::thread{ std::bind(&lcd::run, this) };
 		}
 
@@ -52,7 +52,7 @@ namespace opensalad
 			{
 				if (m_data_changed)
 				{
-					m_drawer_interface->draw();
+					//m_drawer_interface->draw();
 					m_data_changed = false;
 					std::this_thread::sleep_for(std::chrono::milliseconds(30));
 				}

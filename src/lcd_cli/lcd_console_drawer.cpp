@@ -1,87 +1,118 @@
 #include "lcd_console_drawer.h"
 
 #include <iostream>
+#include <windows.h>
+#include <HD44780.h>
+
+static const HANDLE console_handle = GetStdHandle(STD_OUTPUT_HANDLE);
+static constexpr int screen_width = 16;
+static constexpr int screen_height = 4;
+static constexpr int char_width = 5;
+static constexpr int char_height = 8;
+
+static constexpr int margin_horiz = 2;
+static constexpr int margin_vert = 2;
+static constexpr int padding_horiz = 1;
+static constexpr int padding_vert = 1;
+
+static constexpr int screen_line_pixel_count = screen_width * char_width + 2 * margin_horiz + (screen_width - 1) * padding_horiz;
+
+static constexpr long screen_size_in_bytes =
+	(screen_width * char_width + (screen_width - 1) * padding_horiz + 2 * margin_horiz) *
+	(screen_height * char_height + (screen_height - 1) * padding_vert + 2 * margin_vert);
+static char screen_buffer[screen_size_in_bytes] {};
 
 namespace opensalad
 {
 	namespace lcd
 	{
-		void lcd_console_drawer::draw()
+		lcd_console_drawer::lcd_console_drawer()
 		{
-			draw_internal();
+			setup();
 		}
 
-		void lcd_console_drawer::set_char_at(position_t const& pos, byte_t character)
+		void lcd_console_drawer::setup()
 		{
-			size_t converted_pos = convert_coordinate(pos);
-			if (converted_pos > m_dimensions.width * m_dimensions.height)
-				return;
+			CONSOLE_FONT_INFOEX font;
+			font.cbSize = sizeof(CONSOLE_FONT_INFOEX);
+			font.dwFontSize.X = 4;
+			font.dwFontSize.Y = 4;
+			font.FontFamily = FF_DONTCARE;
+			font.FontWeight = FW_NORMAL;
 
-			m_char_buffer[converted_pos] = character;
-		}
+			CONSOLE_SCREEN_BUFFER_INFOEX console_info;
+			console_info.cbSize = sizeof(CONSOLE_SCREEN_BUFFER_INFOEX);
+			GetConsoleScreenBufferInfoEx(console_handle, &console_info);
 
-		void lcd_console_drawer::set_char_buffer(position_t const& pos, std::vector<byte_t> const& buffer)
-		{
-			m_char_buffer = buffer;
-		}
+			COORD c;
+			c.X = screen_width * char_width + 2 * margin_horiz + (screen_width - 1) * padding_horiz;
+			c.Y = screen_height * char_height + 2 * margin_vert + (screen_height - 1) * padding_vert;
+			console_info.dwSize = c;
 
-		void lcd_console_drawer::set_pin_count(byte_t count)
-		{
-			m_pin_count = count;
-		}
+			console_info.srWindow.Left = 0;
+			console_info.srWindow.Right = c.X;
+			console_info.srWindow.Top = 0;
+			console_info.srWindow.Bottom = c.Y;
+			console_info.ColorTable[0] = 0x004ec6a8;
+			console_info.ColorTable[7] = 0x002c413c;
 
-		void lcd_console_drawer::set_pinout(std::vector<std::string> const& pinout)
-		{
-			m_pinout_naming = pinout;
-		}
+			SetCurrentConsoleFontEx(console_handle, false, &font);
+			SetConsoleScreenBufferInfoEx(console_handle, &console_info);
 
-		void lcd_console_drawer::set_dimension(dimensions_t screen_dimension)
-		{
-			m_dimensions = screen_dimension;
-			m_char_buffer.resize(screen_dimension.width * screen_dimension.height, 0);
-		}
-
-		void lcd_console_drawer::set_backlight_intencity(byte_t backlight_intencity)
-		{
-			m_backlight_intencity = backlight_intencity;
-		}
-
-		void lcd_console_drawer::set_backlight_color(color_t backlight_color)
-		{
-			m_backlight_color = backlight_color;
-		}
-
-		void lcd_console_drawer::set_special_character(byte_t character_code, character_t character)
-		{
-			// Console doesn't support drawing custom characters
-			return;
-		}
-
-		void lcd_console_drawer::draw_internal()
-		{
-			for (int y = 0; y < m_dimensions.height; ++y)
+			for (int i = 0; i < screen_size_in_bytes; ++i)
 			{
-				for (int x = 0; x < m_dimensions.width; ++x)
-				{
-					size_t position = convert_coordinate({ (byte_t)x, (byte_t)y });
-					if (position > m_char_buffer.size())
-						break;
-
-					std::cout << m_char_buffer[position] << std::flush;
-				}
-
-				std::cout << std::endl;
+				screen_buffer[i] = ' ';
 			}
 		}
 
-		size_t lcd_console_drawer::convert_coordinate(position_t const& pos) const
+
+		void lcd_console_drawer::flush()
 		{
-			return pos.y * m_dimensions.width + pos.x;
+			WriteConsole(console_handle, screen_buffer, screen_size_in_bytes, nullptr, nullptr);
 		}
 
-		position_t lcd_console_drawer::convert_coordinate(size_t const& pos) const
+		char* lcd_console_drawer::pixel_pointer(int x, int y)
 		{
-			return { pos % m_dimensions.width, (byte_t) (pos / m_dimensions.width) };
+			return screen_buffer + y * screen_line_pixel_count + x;
+		}
+
+		char* lcd_console_drawer::char_at(int col, int row, int x, int y)
+		{
+			return pixel_pointer(
+				col * char_width + x + margin_horiz + col * padding_horiz,
+				row * char_height + y + margin_vert + row * padding_vert
+			);
+		}
+
+		void lcd_console_drawer::draw_character(int col, int row, uint8_t const* pixels)
+		{
+			char symbol_full = 219;
+			char symbol_empty = ' ';
+
+			for (int i = 0; i < 8; ++i)
+			{
+				for (int j = 0; j < 5; ++j)
+				{
+					if (pixels[i] & (1 << j))
+						*char_at(col, row, 4 - j, i) = symbol_full;
+					else
+						*char_at(col, row, 4 - j, i) = symbol_empty;
+				}
+			}
+		}
+
+		void lcd_console_drawer::draw(char* buffer, int width, int height)
+		{
+			for (int i = 0; i < width; ++i)
+			{
+				for (int j = 0; j < height; ++j)
+				{
+					const uint8_t* pixels = HD44780::get_char(buffer[i + width * j]);
+					draw_character(i, j, pixels);
+				}
+			}
+
+			flush();
 		}
 	}
 }
