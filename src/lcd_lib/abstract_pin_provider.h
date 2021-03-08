@@ -1,7 +1,7 @@
 #pragma once
 
 #include <lcd_export.h>
-#include <lcd_lib/interface/i_pin_provider.h>
+#include <i_pin_provider.h>
 
 namespace lcd
 {

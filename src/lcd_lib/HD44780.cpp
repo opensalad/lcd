@@ -1,12 +1,12 @@
-#include "HD44780.h"
+#include <stdafx.h>
 
-#include <i_lcd_drawer_interface.h>
+#include "HD44780.h"
 
 namespace opensalad
 {
     namespace lcd
     {
-        const std::array<const std::array<byte_t, 8>, 256> HD44780::m_cgrom
+        const std::array<const std::array<byte_t, 8>, 256> HD44780::s_cgrom
         {{
             { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, //0x00
             { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }, //0x01
@@ -268,26 +268,16 @@ namespace opensalad
 
         byte_t const* HD44780::get_char(char ch)
         {
-            return m_cgrom.at(ch).data();
+            return s_cgrom.at(ch).data();
         }
 
-        HD44780::HD44780(std::shared_ptr<iface::i_lcd_drawer_interface> drawer_interface)
+        HD44780::HD44780()
 			: m_ddram({ 0 })
             , m_cgram({ 0 })
-            , m_drawer_interface(drawer_interface)
-            , m_cursor_position(0)
-            , m_width(16)
-            , m_height(4)
-            , m_data_changed(true)
-        {
-            init();
-        }
-
-        void HD44780::init()
-        {
-            m_running_thread = std::thread{ std::bind(&HD44780::run, this) };
-            //m_drawer_interface->set_dimension({ m_width, m_height });
-        }
+            , m_ddram_shift(0)
+            , m_increment(1)
+            , m_addressCounter(0)
+        {}
 
         void HD44780::send_command(byte_t const& cmd)
         {
@@ -296,34 +286,45 @@ namespace opensalad
 
         void HD44780::send_data(byte_t const& data)
         {
-            m_ddram[m_cursor_position++] = data;
-
-            position_t pos = { (byte_t)(m_cursor_position % m_width), (byte_t)(m_cursor_position / m_width) };
-			//m_drawer_interface->set_char_at(pos, data);
-            m_data_changed = true;
+            *(m_ddram.data() + m_addressCounter) = data;
+            m_addressCounter += m_increment;
+            m_addressCounter %= 80;
         }
 
-        byte_t HD44780::get_status()
+        byte_t HD44780::get_status() const
         {
 			return 0;
         }
 
-        byte_t HD44780::get_data()
+        byte_t HD44780::get_data() const
         {
 			return 0;
         }
 
-        void HD44780::run()
+        void HD44780::set_light_intencity(double const& intencity)
         {
-            while (1)
-            {
-                if (m_data_changed)
-                {
-					m_drawer_interface->draw((char*)m_ddram.data(), m_width, m_height);
-                    m_data_changed = false;
-                    std::this_thread::sleep_for(std::chrono::milliseconds(30));
-                }
-            }
+            m_lightIntencity = intencity;
+        }
+
+        double HD44780::get_light_intencity() const
+        {
+            return m_lightIntencity;
+        }
+
+        iface::i_lcd_controller_simplified::display_line_mode HD44780::line_mode() const
+        {
+            return m_lineMode;
+        }
+
+        void HD44780::set_line_mode(display_line_mode line_mode)
+        {
+            m_lineMode = line_mode;
+        }
+
+        byte_t const* HD44780::get_character_at(int ddram_address) const
+        {
+            int shift_loop = (m_lineMode == iface::i_lcd_controller_simplified::display_line_mode::single_line ? 0x4f : 0x28);
+            return s_cgrom[m_ddram[ddram_address + m_ddram_shift % shift_loop]].data();
         }
     }
 }

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <lcd_export.h>
 #include <i_observable_backlight_control_interface.h>
 #include <observable_property.h>
 

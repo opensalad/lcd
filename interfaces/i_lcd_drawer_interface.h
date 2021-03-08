@@ -10,7 +10,7 @@ namespace opensalad
 			{
 			public:
 				virtual ~i_lcd_drawer_interface() = default;
-				virtual void draw(char* data, int width, int height) = 0;
+				virtual void draw() = 0;
 				// virtual void set_char_at(position_t const& pos, byte_t character) = 0;
 				// virtual void set_char_buffer(position_t const& pos, std::vector<byte_t> const& buffer) = 0;
 				// virtual void set_pin_count(byte_t count) = 0;

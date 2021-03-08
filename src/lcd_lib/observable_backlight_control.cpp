@@ -1,3 +1,4 @@
+#include <stdafx.h>
 #include "observable_backlight_control.h"
 
 namespace opensalad

@@ -1,7 +1,4 @@
-add_executable(unit_test physical_interface.cpp)
-
-target_include_directories(unit_test
-PUBLIC
+include_directories(
     ${CMAKE_SOURCE_DIR}/src
 	${CMAKE_SOURCE_DIR}/interfaces
 	${CMAKE_SOURCE_DIR}/utils
@@ -9,13 +6,16 @@ PUBLIC
     ${CONAN_INCLUDE_DIRS}
 )
 
-target_link_directories(unit_test
-PUBLIC
+link_directories(
     ${CONAN_LIB_DIRS}
 )
 
-target_link_libraries(unit_test
-PUBLIC
+link_libraries(
     lcd_lib
     ${CONAN_LIBS_boost}
 )
+
+add_executable(controller_unit_test physical_interface.cpp)
+
+enable_testing()
+add_test(NAME ControllerTests COMMAND controller_unit_test)

@@ -19,13 +19,13 @@ generate_export_header(lcd_lib
 source_group("Interfaces" FILES ${INTERFACES})
 source_group("Utilities" FILES ${UTILS})
 target_precompile_headers(lcd_lib
-PUBLIC
-	stdafx.h
+REUSE_FROM pch
 )
 target_include_directories(lcd_lib
 PRIVATE
 	${CONAN_INCLUDE_DIRS}
-	${CMAKE_SOURCE_DIR}/src/
+	${CMAKE_SOURCE_DIR}/src
+	${CMAKE_SOURCE_DIR}/src/pch
 	${CMAKE_SOURCE_DIR}/interfaces/
 	${CMAKE_SOURCE_DIR}/utils/
 	${CMAKE_BINARY_DIR}/exports

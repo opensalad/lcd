@@ -1,5 +1,6 @@
 #pragma once
 
+#include <lcd_export.h>
 #include <i_backlight_control_interface.h>
 
 namespace opensalad

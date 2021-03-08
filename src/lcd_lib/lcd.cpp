@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "lcd.h"
 
 namespace opensalad
@@ -29,12 +29,12 @@ namespace opensalad
 			m_data_changed = true;
 		}
 
-		byte_t lcd::get_status()
+		byte_t lcd::get_status() const
 		{
 			return 0;
 		}
 
-		byte_t lcd::get_data()
+		byte_t lcd::get_data() const
 		{
 			return 0;
 		}
@@ -48,14 +48,11 @@ namespace opensalad
 
 		void lcd::run()
 		{
-			while (1)
+			if (m_data_changed)
 			{
-				if (m_data_changed)
-				{
-					//m_drawer_interface->draw();
-					m_data_changed = false;
-					std::this_thread::sleep_for(std::chrono::milliseconds(30));
-				}
+				//m_drawer_interface->draw();
+				m_data_changed = false;
+				std::this_thread::sleep_for(std::chrono::milliseconds(30));
 			}
 		}
 	}

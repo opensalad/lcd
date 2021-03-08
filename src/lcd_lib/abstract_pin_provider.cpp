@@ -1,3 +1,5 @@
+#include <stdafx.h>
+
 #include "abstract_pin_provider.h"
 
 #include "abstract_analog_pin.h"

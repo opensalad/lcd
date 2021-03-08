@@ -2,49 +2,50 @@
 
 #include <lcd_typedefs.h>
 #include <lcd_export.h>
-#include <interface/i_lcd_controller_interface.h>
+#include <i_lcd_controller.h>
+#include <i_lcd_controller_simplified.h>
 
 namespace opensalad
 {
     namespace lcd
     {
         class i_physical_interface;
-        namespace iface
-        {
-            class i_lcd_drawer_interface;
-        }
 
         class LCD_EXPORT HD44780
-            : public iface::i_lcd_controller_interface
+            : public iface::i_lcd_controller
+            , public iface::i_lcd_controller_simplified
         {
         public:
-            HD44780(std::shared_ptr<iface::i_lcd_drawer_interface> drawer);
+            HD44780();
 
             static byte_t const* get_char(char ch);
 
             virtual void send_command(byte_t const& cmd) override;
             virtual void send_data(byte_t const& data) override;
-            virtual byte_t get_status() override;
-            virtual byte_t get_data() override;
+            virtual byte_t get_status() const override;
+            virtual byte_t get_data() const override;
+
+            virtual void set_light_intencity(double const& intencity) override;
+            virtual double get_light_intencity() const override;
+
+            virtual display_line_mode line_mode() const override;
+            virtual void set_line_mode(display_line_mode line_mode) override;
+
+            virtual byte_t const* get_character_at(int ddram_address) const override;
 
         private:
-            void init();
-            void run();
-
-        private:
-			std::shared_ptr<iface::i_lcd_drawer_interface> m_drawer_interface;
+            static const std::array<const std::array<byte_t, 8>, 256> s_cgrom;
             std::weak_ptr<i_physical_interface> m_interface;
             std::array<byte_t, 80> m_ddram;
             std::array<byte_t, 64> m_cgram;
 
-        public:
-            static const std::array<const std::array<byte_t, 8>, 256> m_cgrom;
+            int m_ddram_shift;
+            double m_lightIntencity;
+            uint8_t m_increment;
 
-            std::thread m_running_thread;
-            byte_t m_cursor_position;
-            byte_t m_width;
-            byte_t m_height;
-            volatile bool m_data_changed;
+            uint8_t m_addressCounter;
+
+            i_lcd_controller_simplified::display_line_mode m_lineMode;
         };
     }
 }

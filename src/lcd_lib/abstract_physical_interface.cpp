@@ -1,7 +1,8 @@
-#include "abstract_physical_interface.h"
+#include <stdafx.h>
 
+#include "abstract_physical_interface.h"
 #include "abstract_pin_provider.h"
-#include <lcd_lib/interface/i_pin.h>
+#include <i_pin.h>
 
 namespace lcd
 {

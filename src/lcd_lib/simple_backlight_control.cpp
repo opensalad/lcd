@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include <stdafx.h>
 #include "simple_backlight_control.h"
 
 namespace opensalad

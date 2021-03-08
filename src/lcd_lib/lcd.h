@@ -1,6 +1,7 @@
 #pragma once
 
-#include <lcd_lib/interface/i_lcd_controller_interface.h>
+#include <lcd_export.h>
+#include <i_lcd_controller.h>
 #include <i_lcd_drawer_interface.h>
 #include "observable_backlight_control.h"
 #include "signal.h"
@@ -10,7 +11,7 @@ namespace opensalad
 	namespace lcd
 	{
 		class LCD_EXPORT lcd
-			: public iface::i_lcd_controller_interface
+			: public iface::i_lcd_controller
 			, public observable_backlight_control
 		{
 		public:
@@ -18,8 +19,8 @@ namespace opensalad
 
 			void send_command(byte_t const& cmd) override;
 			void send_data(byte_t const& data) override;
-			byte_t get_status() override;
-			byte_t get_data() override;
+			byte_t get_status() const override;
+			byte_t get_data() const override;
 
 		private:
 			void init();

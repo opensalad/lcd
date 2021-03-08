@@ -9,4 +9,3 @@
 #include <thread>
 
 #include <lcd_typedefs.h>
-#include <lcd_export.h>
